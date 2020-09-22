@@ -67,6 +67,7 @@ namespace Xamarin.Forms.Platform.iOS
 				UpdateIncrement();
 		}
 
+		[PortHandler]
 		void OnValueChanged(object sender, EventArgs e)
 		{
 			((IElementController)Element).SetValueFromRenderer(Stepper.ValueProperty, Control.Value);
