@@ -7,13 +7,13 @@ namespace Xamarin.Platform
 {
 	public interface IStepperHandler
 	{
-		AButton UpButton { get; }
+		AButton? UpButton { get; }
 
-		AButton DownButton { get; }
+		AButton? DownButton { get; }
 
 		AButton CreateButton();
 
-		IStepper Element { get; }
+		IStepper? Element { get; }
 	}
 
 	class StepperHandlerHolder : Java.Lang.Object
@@ -28,7 +28,7 @@ namespace Xamarin.Platform
 
 	public static class StepperHandlerManager
 	{
-		public static void CreateStepperButtons<TButton>(IStepperHandler handler, out TButton downButton, out TButton upButton)
+		public static void CreateStepperButtons<TButton>(IStepperHandler handler, out TButton? downButton, out TButton? upButton)
 			where TButton : AButton
 		{
 			downButton = (TButton)handler.CreateButton();
@@ -61,24 +61,27 @@ namespace Xamarin.Platform
 			downButton.NextFocusForwardId = upButton.Id;
 		}
 
-		public static void UpdateButtons<TButton>(IStepperHandler handler, TButton downButton, TButton upButton, PropertyChangedEventArgs e = null)
+		public static void UpdateButtons<TButton>(IStepperHandler handler, TButton? downButton, TButton? upButton, PropertyChangedEventArgs? e = null)
 			where TButton : AButton
 		{
 			if (!(handler?.Element is IStepper stepper))
 				return;
 
 			// NOTE: a value of `null` means that we are forcing an update
-			downButton.Enabled = stepper.IsEnabled && stepper.Value > stepper.Minimum;
-			upButton.Enabled = stepper.IsEnabled && stepper.Value < stepper.Maximum;
+			if (downButton != null)
+				downButton.Enabled = stepper.IsEnabled && stepper.Value > stepper.Minimum;
+
+			if (upButton != null)
+				upButton.Enabled = stepper.IsEnabled && stepper.Value < stepper.Maximum;
 		}
 
 		class StepperListener : Java.Lang.Object, AView.IOnClickListener
 		{
 			public static readonly StepperListener Instance = new StepperListener();
 
-			public void OnClick(AView v)
+			public void OnClick(AView? view)
 			{
-				if (!(v?.Tag is StepperHandlerHolder HandlerHolder))
+				if (!(view?.Tag is StepperHandlerHolder HandlerHolder))
 					return;
 
 				if (!(HandlerHolder.StepperHandler?.Element is IStepper stepper))
@@ -86,7 +89,7 @@ namespace Xamarin.Platform
 
 				var increment = stepper.Increment;
 
-				if (v == HandlerHolder.StepperHandler.DownButton)
+				if (view == HandlerHolder.StepperHandler.DownButton)
 					increment = -increment;
 
 				HandlerHolder.StepperHandler.Element.Value = stepper.Value + increment;

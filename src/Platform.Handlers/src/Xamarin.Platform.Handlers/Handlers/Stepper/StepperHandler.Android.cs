@@ -1,3 +1,4 @@
+using System;
 using Android.Widget;
 using Android.Views;
 using AButton = Android.Widget.Button;
@@ -7,14 +8,14 @@ namespace Xamarin.Platform.Handlers
 {
 	public partial class StepperHandler : AbstractViewHandler<IStepper, LinearLayout> , IStepperHandler
 	{
-		AButton _downButton;
-		AButton _upButton;
+		AButton? _downButton;
+		AButton? _upButton;
 
-		IStepper IStepperHandler.Element => VirtualView;
+		IStepper? IStepperHandler.Element => VirtualView;
 
-		AButton IStepperHandler.UpButton => _upButton;
+		AButton? IStepperHandler.UpButton => _upButton;
 
-		AButton IStepperHandler.DownButton => _downButton;
+		AButton? IStepperHandler.DownButton => _downButton;
 
 		protected override LinearLayout CreateView()
 		{
@@ -26,24 +27,14 @@ namespace Xamarin.Platform.Handlers
 			};
 
 			StepperHandlerManager.CreateStepperButtons(this, out _downButton, out _upButton);
-			stepperLayout.AddView(_downButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent));
-			stepperLayout.AddView(_upButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent));
+
+			if (_downButton != null)
+				stepperLayout.AddView(_downButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent));
+
+			if (_upButton != null)
+				stepperLayout.AddView(_upButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WrapContent, ViewGroup.LayoutParams.MatchParent));
 
 			return stepperLayout;
-		}
-
-		public static void MapMinimum(IViewHandler handler, IStepper slider) => (handler as StepperHandler)?.UpdateButtons();
-
-		public static void MapMaximum(IViewHandler handler, IStepper slider) => (handler as StepperHandler)?.UpdateButtons();
-
-		public static void MapIncrement(IViewHandler handler, IStepper slider) => (handler as StepperHandler)?.UpdateButtons();
-
-		public static void MapValue(IViewHandler handler, IStepper slider) =>  (handler as StepperHandler)?.UpdateButtons();
-
-		public static void MapIsEnabled(IViewHandler handler, IStepper slider)
-		{
-			ViewHandler.MapPropertyIsEnabled(handler, slider);
-			(handler as StepperHandler)?.UpdateButtons();
 		}
 
 		public virtual void UpdateButtons()
@@ -53,6 +44,9 @@ namespace Xamarin.Platform.Handlers
 
 		AButton IStepperHandler.CreateButton()
 		{
+			if (Context == null)
+				throw new ArgumentException("Context is null or empty", nameof(Context));
+
 			var button = new AButton(Context);
 			button.SetHeight((int)Context.ToPixels(10.0));
 			return button;

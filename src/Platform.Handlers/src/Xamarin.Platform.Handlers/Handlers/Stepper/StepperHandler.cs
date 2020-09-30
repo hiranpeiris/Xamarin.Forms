@@ -2,7 +2,7 @@
 {
 	public partial class StepperHandler
 	{
-		public static PropertyMapper<IStepper> StepperMapper = new PropertyMapper<IStepper>(ViewHandler.ViewMapper)
+		public static PropertyMapper<IStepper, StepperHandler> StepperMapper = new PropertyMapper<IStepper, StepperHandler>(ViewHandler.ViewMapper)
 		{
 			[nameof(IStepper.Minimum)] = MapMinimum,
 			[nameof(IStepper.Maximum)] = MapMaximum,
@@ -13,6 +13,37 @@
 #endif
 		};
 
+		public static void MapMinimum(StepperHandler handler, IStepper stepper)
+		{
+			ViewHandler.CheckParameters(handler, stepper);
+			handler.TypedNativeView?.UpdateMinimum(handler, stepper);
+		}
+
+		public static void MapMaximum(StepperHandler handler, IStepper stepper)
+		{
+			ViewHandler.CheckParameters(handler, stepper);
+			handler.TypedNativeView?.UpdateMaximum(handler, stepper);
+		}
+
+		public static void MapIncrement(StepperHandler handler, IStepper stepper)
+		{
+			ViewHandler.CheckParameters(handler, stepper);
+			handler.TypedNativeView?.UpdateIncrement(handler, stepper);
+		}
+
+		public static void MapValue(StepperHandler handler, IStepper stepper)
+		{
+			ViewHandler.CheckParameters(handler, stepper);
+			handler.TypedNativeView?.UpdateValue(handler, stepper);
+		}
+
+#if __ANDROID__ || NETCOREAPP
+		public static void MapIsEnabled(StepperHandler handler, IStepper stepper)
+		{
+			ViewHandler.CheckParameters(handler, stepper);
+			handler.TypedNativeView?.UpdateIsEnabled(handler, stepper);
+		}
+#endif
 		public StepperHandler() : base(StepperMapper)
 		{
 
