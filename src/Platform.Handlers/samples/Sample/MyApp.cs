@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sample.Pages;
+using Sample.Services;
 using Xamarin.Platform;
 using Xamarin.Platform.Core;
 
@@ -13,7 +17,8 @@ namespace Sample
 
 		public override IView CreateView()
 		{
-			return new Xamarin.Forms.Button() { Text = "Hello I'm a button" };
+			var button = Services.GetRequiredService<MainPage>().Content as Xamarin.Forms.Button;
+			return button;
 		}
 	}
 }
