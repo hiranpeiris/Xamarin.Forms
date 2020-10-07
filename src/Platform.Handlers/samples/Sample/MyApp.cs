@@ -1,19 +1,19 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Microsoft.Extensions.Hosting;
 using Xamarin.Platform;
 using Xamarin.Platform.Core;
 
 namespace Sample
 {
-	public class MyApp : IApp
+	public class MyApp : App
 	{
-		public MyApp()
+		public MyApp(IHost host) : base(host)
 		{
-			Platform.Init();
 		}
 
-		public IView CreateView()
+		public override IView CreateView()
 		{
-			return new Button() { Text = "Hello I'm a button" };
+			return new Xamarin.Forms.Button() { Text = "Hello I'm a button" };
 		}
 	}
 }

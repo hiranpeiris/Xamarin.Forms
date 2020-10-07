@@ -1,24 +1,27 @@
-﻿using Xamarin.Platform.Handlers;
-using RegistrarHandlers = Xamarin.Platform.Registrar;
+﻿using Microsoft.Extensions.Hosting;
 
 namespace Sample
 {
-	public class Platform
+	public static class Platform
 	{
-		static bool HasInit;
-
-		public static void Init()
+		public static IHostBuilder Init(this IHostBuilder builder)
 		{
-			if (HasInit)
-				return;
-
-			HasInit = true;
-
-			//RegistrarHandlers.Handlers.Register<Layout, LayoutHandler>();
-
-			RegistrarHandlers.Handlers.Register<Button, ButtonHandler>();
-			//RegistrarHandlers.Handlers.Register<Entry, EntryHandler>();
-			//RegistrarHandlers.Handlers.Register<Label, LabelHandler>();
+			return builder.ConfigureLogging((c, l) =>
+			{
+				if (c.HostingEnvironment.IsDevelopment())
+				{
+					//l.AddConsole(o =>
+					//{
+					//	o.DisableColors = true;
+					//});
+				}
+				else
+				{
+					//use for example AppCenter
+				}
+			});
+			//.RegisterHandler<Button, ButtonHandler>()
+			//.RegisterHandlers(new Dictionary<Type, Type> { { typeof(Button), typeof(ButtonHandler) } })
 		}
 	}
 }
