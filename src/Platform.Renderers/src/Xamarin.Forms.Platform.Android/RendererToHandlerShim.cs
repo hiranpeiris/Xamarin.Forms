@@ -7,10 +7,13 @@ namespace Xamarin.Forms
 {
 	public class RendererToHandlerShim : Xamarin.Platform.IViewHandler
 	{
-		readonly IVisualElementRenderer _visualElementRenderer;
+		internal IVisualElementRenderer VisualElementRenderer { get; private set; }
 
-		public static RendererToHandlerShim CreateShim(object renderer)
+		public static IViewHandler CreateShim(object renderer)
 		{
+			if (renderer is IViewHandler handler)
+				return handler;
+
 			if (renderer is IVisualElementRenderer ivr)
 				return new RendererToHandlerShim(ivr);
 
@@ -19,10 +22,35 @@ namespace Xamarin.Forms
 
 		public RendererToHandlerShim(IVisualElementRenderer visualElementRenderer)
 		{
-			_visualElementRenderer = visualElementRenderer;
+			VisualElementRenderer = visualElementRenderer;
+			VisualElementRenderer.ElementChanged += OnElementChanged;
+
+			if (VisualElementRenderer.Element is IView view)
+			{
+				view.Handler = this;
+				this.SetView(view);
+			}
+			else if (VisualElementRenderer.Element != null)
+				throw new Exception($"{VisualElementRenderer.Element} must implement: {nameof(Xamarin.Platform.IView)}");
+
 		}
 
-		public object NativeView => _visualElementRenderer.View;
+		void OnElementChanged(object sender, VisualElementChangedEventArgs e)
+		{
+			if (e.OldElement is IView view)
+				view.Handler = null;
+
+			if (e.NewElement is IView newView)
+			{
+				newView.Handler = this;
+				this.SetView(newView);
+			}
+			else if (e.NewElement != null)
+				throw new Exception($"{e.NewElement} must implement: {nameof(Xamarin.Platform.IView)}");
+
+		}
+
+		public object NativeView => VisualElementRenderer.View;
 
 		public bool HasContainer
 		{
@@ -32,34 +60,34 @@ namespace Xamarin.Forms
 
 		public SizeRequest GetDesiredSize(double widthConstraint, double heightConstraint)
 		{
-			var returnValue = _visualElementRenderer.GetDesiredSize((int)widthConstraint, (int)heightConstraint);
+			var returnValue = VisualElementRenderer.GetDesiredSize((int)widthConstraint, (int)heightConstraint);
 			return returnValue;
 		}
 
 		public void SetFrame(Rectangle frame)
 		{
-			var context = _visualElementRenderer.View.Context;
+			var context = VisualElementRenderer.View.Context;
 			var width = MeasureSpecFactory.MakeMeasureSpec((int)Platform.Android.ContextExtensions.ToPixels(context, frame.Width), global::Android.Views.MeasureSpecMode.Exactly);
 			var height = MeasureSpecFactory.MakeMeasureSpec((int)Platform.Android.ContextExtensions.ToPixels(context, frame.Height), global::Android.Views.MeasureSpecMode.Exactly);
 
-			_visualElementRenderer.View.Measure(width, height);
+			VisualElementRenderer.View.Measure(width, height);
 		}
 
 		public void SetView(IView view)
 		{
-			_visualElementRenderer.SetElement((VisualElement)view);
+			VisualElementRenderer.SetElement((VisualElement)view);
 		}
 
 		public void TearDown()
 		{
-			_visualElementRenderer.Dispose();
+			VisualElementRenderer.Dispose();
 		}
 
 		public void UpdateValue(string property)
 		{
-			if(property == "Frame")
+			if (property == "Frame")
 			{
-				SetFrame(_visualElementRenderer.Element.Bounds);
+				SetFrame(VisualElementRenderer.Element.Bounds);
 			}
 
 			//_visualElementRenderer.Element.

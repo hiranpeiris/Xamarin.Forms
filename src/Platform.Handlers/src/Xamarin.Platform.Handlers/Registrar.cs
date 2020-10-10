@@ -30,11 +30,13 @@ namespace Xamarin.Platform
 
 		public void Register(Type view, Type handler)
 		{
+			_handlerFactories.Remove(view);
 			_handler[view] = handler;
 		}
 
 		public void Register(Type view, Func<Type, IViewHandler> factory)
 		{
+			_handler.Remove(view);
 			_handlerFactories[view] = factory;
 		}
 
