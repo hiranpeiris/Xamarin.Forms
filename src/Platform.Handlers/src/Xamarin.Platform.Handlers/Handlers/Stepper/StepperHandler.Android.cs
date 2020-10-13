@@ -37,11 +37,6 @@ namespace Xamarin.Platform.Handlers
 			return stepperLayout;
 		}
 
-		public virtual void UpdateButtons()
-		{
-			StepperHandlerManager.UpdateButtons(this, _downButton, _upButton);
-		}
-
 		AButton IStepperHandler.CreateButton()
 		{
 			if (Context == null)

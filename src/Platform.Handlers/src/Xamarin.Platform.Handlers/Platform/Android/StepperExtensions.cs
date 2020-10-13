@@ -1,34 +1,52 @@
 ﻿using Android.Widget;
-using Xamarin.Platform.Handlers;
+using AButton = Android.Widget.Button;
 
 namespace Xamarin.Platform
 {
 	public static class StepperExtensions
 	{
-		public static void UpdateMinimum(this LinearLayout linearLayout, StepperHandler handler, IStepper stepper)
+		public static void UpdateMinimum(this LinearLayout linearLayout, IStepper stepper)
 		{
-			handler.UpdateButtons();
+			UpdateButtons(linearLayout, stepper);
 		}
 
-		public static void UpdateMaximum(this LinearLayout linearLayout, StepperHandler handler, IStepper stepper)
+		public static void UpdateMaximum(this LinearLayout linearLayout, IStepper stepper)
 		{
-			handler.UpdateButtons();
+			UpdateButtons(linearLayout, stepper);
 		}
 
-		public static void UpdateIncrement(this LinearLayout linearLayout, StepperHandler handler, IStepper stepper)
+		public static void UpdateIncrement(this LinearLayout linearLayout, IStepper stepper)
 		{
-			handler.UpdateButtons();
+			UpdateButtons(linearLayout, stepper);
 		}
 
-		public static void UpdateValue(this LinearLayout linearLayout, StepperHandler handler, IStepper stepper)
+		public static void UpdateValue(this LinearLayout linearLayout, IStepper stepper)
 		{
-			handler.UpdateButtons();
+			UpdateButtons(linearLayout, stepper);
 		}
 
-		public static void UpdateIsEnabled(this LinearLayout linearLayout, StepperHandler handler, IStepper stepper)
+		public static void UpdateIsEnabled(this LinearLayout linearLayout, IStepper stepper)
 		{
-			ViewHandler.MapIsEnabled(handler, stepper);
-			handler.UpdateButtons();
+			UpdateButtons(linearLayout, stepper);
+		}
+
+		internal static void UpdateButtons(this LinearLayout linearLayout, IStepper stepper)
+		{
+			AButton? downButton = null;
+			AButton? upButton = null;
+
+			for (int i = 0; i < linearLayout?.ChildCount; i++)
+			{
+				var childButton = linearLayout.GetChildAt(i) as AButton;
+
+				if (childButton?.Text == "－")
+					downButton = childButton;
+
+				if (childButton?.Text == "＋")
+					upButton = childButton;
+			}
+
+			StepperHandlerManager.UpdateButtons(stepper, downButton, upButton);
 		}
 	}
 }

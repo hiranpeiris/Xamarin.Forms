@@ -40,6 +40,7 @@ namespace Xamarin.Platform
 			downButton.Gravity = GravityFlags.Center;
 			downButton.Tag = handler as Java.Lang.Object;
 			downButton.SetOnClickListener(StepperListener.Instance);
+
 			upButton.Gravity = GravityFlags.Center;
 			upButton.Tag = handler as Java.Lang.Object;
 			upButton.SetOnClickListener(StepperListener.Instance);
@@ -61,12 +62,9 @@ namespace Xamarin.Platform
 			downButton.NextFocusForwardId = upButton.Id;
 		}
 
-		public static void UpdateButtons<TButton>(IStepperHandler handler, TButton? downButton, TButton? upButton, PropertyChangedEventArgs? e = null)
+		public static void UpdateButtons<TButton>(IStepper stepper, TButton? downButton, TButton? upButton, PropertyChangedEventArgs? e = null)
 			where TButton : AButton
 		{
-			if (!(handler?.Element is IStepper stepper))
-				return;
-
 			// NOTE: a value of `null` means that we are forcing an update
 			if (downButton != null)
 				downButton.Enabled = stepper.IsEnabled && stepper.Value > stepper.Minimum;
@@ -94,7 +92,7 @@ namespace Xamarin.Platform
 
 				HandlerHolder.StepperHandler.Element.Value = stepper.Value + increment;
 				HandlerHolder.StepperHandler.Element.ValueChanged();
-				UpdateButtons(HandlerHolder.StepperHandler, HandlerHolder.StepperHandler.DownButton, HandlerHolder.StepperHandler.UpButton);
+				UpdateButtons(HandlerHolder.StepperHandler.Element, HandlerHolder.StepperHandler.DownButton, HandlerHolder.StepperHandler.UpButton);
 			}
 		}
 	}

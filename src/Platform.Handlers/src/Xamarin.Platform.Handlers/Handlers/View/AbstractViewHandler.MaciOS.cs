@@ -40,7 +40,6 @@ namespace Xamarin.Platform.Handlers
 		void RemoveContainer()
 		{
 
-
 		}
 	}
 }
