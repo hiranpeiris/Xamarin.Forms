@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using AppKit;
+using Xamarin.Platform;
 
 namespace Xamarin.Forms.Platform.MacOS
 {
@@ -10,6 +11,7 @@ namespace Xamarin.Forms.Platform.MacOS
 
 		IElementController ElementController => Element;
 
+		[PortHandler]
 		protected override void OnElementChanged(ElementChangedEventArgs<Stepper> e)
 		{
 			if (e.NewElement != null)
@@ -55,26 +57,31 @@ namespace Xamarin.Forms.Platform.MacOS
 			base.Dispose(disposing);
 		}
 
+		[PortHandler]
 		void OnControlActivated(object sender, EventArgs e)
 		{
 			ElementController?.SetValueFromRenderer(Stepper.ValueProperty, Control.DoubleValue);
 		}
 
+		[PortHandler]
 		void UpdateIncrement()
 		{
 			Control.Increment = Element.Increment;
 		}
 
+		[PortHandler]
 		void UpdateMaximum()
 		{
 			Control.MaxValue = Element.Maximum;
 		}
 
+		[PortHandler]
 		void UpdateMinimum()
 		{
 			Control.MinValue = Element.Minimum;
 		}
 
+		[PortHandler]
 		void UpdateValue()
 		{
 			if (Math.Abs(Control.DoubleValue - Element.Value) > 0)
