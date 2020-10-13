@@ -117,6 +117,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				UpdateThumbColor();
 		}
 
+		[PortHandler]
 		void UpdateOnColor()
 		{
 			if (Element == null || Control == null)
@@ -139,6 +140,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			}
 		}
 
+		[PortHandler]
 		void UpdateThumbColor()
 		{
 			if (Element == null)
@@ -159,6 +161,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			}
 		}
 
+		[PortHandler]
 		void HandleToggled(object sender, EventArgs e)
 		{
 			Control.Checked = Element.IsToggled;

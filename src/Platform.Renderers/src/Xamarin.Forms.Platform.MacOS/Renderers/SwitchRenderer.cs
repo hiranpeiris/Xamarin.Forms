@@ -1,5 +1,6 @@
 ﻿using System;
 using AppKit;
+using Xamarin.Platform;
 
 namespace Xamarin.Forms.Platform.MacOS
 {
@@ -53,6 +54,7 @@ namespace Xamarin.Forms.Platform.MacOS
 			UpdateState();
 		}
 
+		[PortHandler]
 		void UpdateState()
 		{
 			Control.State = Element.IsToggled ? NSCellStateValue.On : NSCellStateValue.Off;
