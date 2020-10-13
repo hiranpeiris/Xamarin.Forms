@@ -17,6 +17,7 @@ using AndroidX.AppCompat.App;
 using AndroidX.AppCompat.Graphics.Drawable;
 using AndroidX.DrawerLayout.Widget;
 using Xamarin.Forms.Internals;
+using Xamarin.Platform;
 using static Android.Views.View;
 using static Xamarin.Forms.PlatformConfiguration.AndroidSpecific.AppCompat.NavigationPage;
 using ActionBarDrawerToggle = AndroidX.AppCompat.App.ActionBarDrawerToggle;
@@ -1085,7 +1086,7 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			{
 				var reflectableType = _titleViewRenderer as System.Reflection.IReflectableType;
 				var rendererType = reflectableType != null ? reflectableType.GetTypeInfo().AsType() : _titleViewRenderer.GetType();
-				if (titleView == null || Registrar.Registered.GetHandlerTypeForObject(titleView) != rendererType)
+				if (titleView == null || Internals.Registrar.Registered.GetHandlerTypeForObject(titleView) != rendererType)
 				{
 					if (_titleView != null)
 						_titleView.Child = null;

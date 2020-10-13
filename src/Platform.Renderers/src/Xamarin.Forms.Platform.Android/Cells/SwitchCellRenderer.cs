@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using Android.Content;
-using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Views;
+using Xamarin.Platform;
 using ASwitch = Android.Widget.Switch;
 using AView = Android.Views.View;
 

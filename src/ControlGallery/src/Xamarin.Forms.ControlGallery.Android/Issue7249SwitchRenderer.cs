@@ -3,6 +3,7 @@ using Android.Graphics;
 using Android.OS;
 using Xamarin.Forms.Controls.Issues;
 using Xamarin.Forms.Platform.Android;
+using Xamarin.Platform;
 using static Android.Widget.CompoundButton;
 
 namespace Xamarin.Forms.ControlGallery.Android
