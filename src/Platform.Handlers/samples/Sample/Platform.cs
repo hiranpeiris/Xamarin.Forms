@@ -8,7 +8,7 @@ namespace Sample
 {
 	public static class Platform
 	{
-		public static IHostBuilder Init(this IHostBuilder builder)
+		public static IHostBuilder UserInit(this IHostBuilder builder)
 		{
 			builder.ConfigureServices(services =>
 			{
