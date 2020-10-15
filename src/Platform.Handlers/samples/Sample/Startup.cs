@@ -3,20 +3,21 @@ using Microsoft.Extensions.Hosting;
 using Sample.Pages;
 using Sample.Services;
 using Sample.ViewModel;
+using Xamarin.Platform.Hosting;
 
 namespace Sample
 {
-	public static class Platform
+	public static class Startup
 	{
-		public static IHostBuilder UserInit(this IHostBuilder builder)
+		public static AppBuilder UserInit(this AppBuilder builder)
 		{
-			builder.ConfigureServices(services =>
+			builder.ConfigureServices((context, services) =>
 			{
 				services.AddSingleton<ITextService, TextService>();
 				services.AddTransient<MainPageViewModel>();
 				services.AddTransient<MainPage>();
 			});
-			return builder.ConfigureLogging((c, l) =>
+			builder.HostBuilder.ConfigureLogging((c, l) =>
 			{
 				if (c.HostingEnvironment.IsDevelopment())
 				{
@@ -30,6 +31,7 @@ namespace Sample
 					//use for example AppCenter
 				}
 			});
+			return builder; 
 			//.RegisterHandler<Button, ButtonHandler>()
 			//.RegisterHandlers(new Dictionary<Type, Type> { { typeof(Button), typeof(ButtonHandler) } })
 		}

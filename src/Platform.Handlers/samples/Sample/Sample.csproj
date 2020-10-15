@@ -14,7 +14,7 @@
     <ProjectReference Include="..\..\src\Xamarin.Platform.Handlers\Xamarin.Platform.Handlers.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Platform.cs">
+    <Compile Update="Startup.cs">
       <SubType></SubType>
     </Compile>
   </ItemGroup>
