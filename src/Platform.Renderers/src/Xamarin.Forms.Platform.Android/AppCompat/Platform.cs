@@ -291,14 +291,6 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 			layout = null;
 		}
 
-		//[Obsolete("CreateRenderer(VisualElement) is obsolete as of version 2.5. Please use CreateRendererWithContext(VisualElement, Context) instead.")]
-		//[EditorBrowsable(EditorBrowsableState.Never)]
-		//public static IVisualElementRenderer CreateRenderer(VisualElement element)
-		//{
-		//	// If there's a previewer context set, use that when created 
-		//	return CreateRenderer(element, GetPreviewerContext(element) ?? Forms.Context);
-		//}
-
 		internal static IVisualElementRenderer CreateRenderer(VisualElement element, Context context)
 		{
 			IVisualElementRenderer renderer = null;
@@ -315,6 +307,14 @@ namespace Xamarin.Forms.Platform.Android.AppCompat
 				if (handler is RendererToHandlerShim shim)
 				{
 					renderer = shim.VisualElementRenderer;
+
+					if(renderer == null)
+					{
+						renderer = Registrar.Registered.GetHandlerForObject<IVisualElementRenderer>(element, context)
+										?? new DefaultRenderer(context);
+
+						shim.SetupRenderer(renderer);
+					}
 				}
 				else if (handler is IVisualElementRenderer ver)
 					renderer = ver;

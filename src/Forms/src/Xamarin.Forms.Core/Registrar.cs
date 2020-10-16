@@ -62,8 +62,7 @@ namespace Xamarin.Forms.Internals
 			Xamarin.Platform.Registrar.Handlers.Register(tview,
 				(viewType) =>
 				{
-					var renderer = DependencyResolver.ResolveOrCreate(trender);
-					return Registrar.HandlerShim?.Invoke(renderer);
+					return Registrar.HandlerShim?.Invoke(null);
 				});
 		}
 

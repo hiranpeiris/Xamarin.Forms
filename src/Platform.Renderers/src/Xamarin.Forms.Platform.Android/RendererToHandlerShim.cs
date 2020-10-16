@@ -17,10 +17,16 @@ namespace Xamarin.Forms
 			if (renderer is IVisualElementRenderer ivr)
 				return new RendererToHandlerShim(ivr);
 
-			return null;
+			return new RendererToHandlerShim(null);
 		}
 
 		public RendererToHandlerShim(IVisualElementRenderer visualElementRenderer)
+		{
+			if(visualElementRenderer != null)
+				SetupRenderer(visualElementRenderer);
+		}
+
+		public void SetupRenderer(IVisualElementRenderer visualElementRenderer)
 		{
 			VisualElementRenderer = visualElementRenderer;
 			VisualElementRenderer.ElementChanged += OnElementChanged;
@@ -32,7 +38,6 @@ namespace Xamarin.Forms
 			}
 			else if (VisualElementRenderer.Element != null)
 				throw new Exception($"{VisualElementRenderer.Element} must implement: {nameof(Xamarin.Platform.IView)}");
-
 		}
 
 		void OnElementChanged(object sender, VisualElementChangedEventArgs e)
@@ -42,7 +47,7 @@ namespace Xamarin.Forms
 
 			if (e.NewElement is IView newView)
 			{
-				newView.Handler = this;
+				newView.Handler = this;				
 				this.SetView(newView);
 			}
 			else if (e.NewElement != null)
@@ -75,7 +80,8 @@ namespace Xamarin.Forms
 
 		public void SetView(IView view)
 		{
-			VisualElementRenderer.SetElement((VisualElement)view);
+			if (VisualElementRenderer.Element != view)
+				VisualElementRenderer.SetElement((VisualElement)view);
 		}
 
 		public void TearDown()
